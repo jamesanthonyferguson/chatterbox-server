@@ -25,11 +25,18 @@ var handleRequest = function(request, response) {
   /* .writeHead() tells our server what HTTP status code to send back */
   response.writeHead(statusCode, headers);
 
+  //Create some dummy data to test Get Request
+  var dummyMessage = {username: "James", text: "test message", roomname: "lobby"};
+  var results = [dummyMessage];
+  var data = {results: results};
+  var dataString = JSON.stringify(data);
+  // response.write(dataString)
+
   /* Make sure to always call response.end() - Node will not send
    * anything back to the client until you do. The string you pass to
    * response.end() will be the body of the response - i.e. what shows
    * up in the browser.*/
-  response.end("Hello, World!");
+  response.end(dataString);
 };
 
 /* These headers will allow Cross-Origin Resource Sharing (CORS).
