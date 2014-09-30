@@ -44,6 +44,14 @@ var handleRequest = function(request, response) {
     headers['Content-Type'] = "text/plain";
     response.end();
   }
+
+  if (request.method === "GET" && request.url === "/client/styles/styles.css"){
+    headers["Content-Type"] = "text/css";
+    response.writeHead(statusCode[0],headers);
+    response.write(css);
+    response.end();
+  }
+
   //Serve files from server
   if (request.method === "GET" && request.url === "/"){
     headers["Content-Type"] = "text/html";
@@ -52,14 +60,6 @@ var handleRequest = function(request, response) {
     response.end();
 
   }
-
-  if (request.method === "GET" && request.url === "/client/styles/style.css"){
-    headers["Content-Type"] = "text/css";
-    response.writeHead(statusCode[0],headers);
-    response.write(css);
-    response.end();
-  }
-
   if (request.method === "GET" && request.url === "/client/scripts/app.js"){
     headers["Content-Type"] = "application/javascript";
     response.writeHead(statusCode[0],headers);

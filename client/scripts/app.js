@@ -25,7 +25,7 @@ var app = {
   send: function(message){
     $.ajax({
       // always use this url
-      url: 'https://api.parse.com/1/classes/chatterbox',
+      url: 'http://127.0.0.1:3000/classes/messages',
       type: 'POST',
       data: JSON.stringify(message),
       contentType: 'application/json',
@@ -40,9 +40,9 @@ var app = {
   fetch: function(){
     $.ajax({
       // always use this url
-      url: 'https://api.parse.com/1/classes/chatterbox',
+      url: 'http://127.0.0.1:3000/classes/messages',
       type: 'GET',
-      data: {'order': '-createdAt'},
+      // data: {'order': '-createdAt'},
       contentType: 'json',
       success: function (data) {
         console.log('chatterbox: Message received: ' + data);
@@ -117,4 +117,5 @@ $(document).ready(function() {
       $('.update').trigger('click');
     }, 5000);
 });
+
 
