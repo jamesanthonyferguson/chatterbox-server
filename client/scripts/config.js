@@ -11,6 +11,7 @@ var config = function() {
   }
 };
 
+config();
 
 // Don't worry about this code, it will ensure that your ajax calls are allowed by the browser
 // $.ajaxPrefilter(function (settings, _, jqXHR) {

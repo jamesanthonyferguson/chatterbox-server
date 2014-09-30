@@ -33,7 +33,8 @@ var handleRequest = function(request, response) {
    * below about CORS. */
   var headers = defaultCorsHeaders;
 
-  var usernameParam = /^\/\?username.\w+/;
+  var usernameParam = new RegExp("\/\?username=[a-zA-Z0-9]*");
+  var usernameParam2 = new RegExp("abc");
 
 
   /* .writeHead() tells our server what HTTP status code to send back */
@@ -53,7 +54,15 @@ var handleRequest = function(request, response) {
   }
 
   //Serve files from server
-  if (request.method === "GET" && (request.url === "/" || request.url === /^\/\?username.\w+/)){
+  if (request.method === "GET" && request.url === "/"){
+    headers["Content-Type"] = "text/html";
+    response.writeHead(statusCode[0],headers);
+    response.write(index);
+    response.end();
+
+  }
+  if (request.method === "GET" && usernameParam.test(request.url)){
+    console.log("IMPORTANT I AM BEING TRIGGERED")
     headers["Content-Type"] = "text/html";
     response.writeHead(statusCode[0],headers);
     response.write(index);
@@ -125,7 +134,7 @@ var handleRequest = function(request, response) {
   }
     // response.write(JSON.stringify(data));
     //
-  if (!(request.url === "/classes/messages" || request.url === "/classes/room1") ) {
+  else if (!(request.url === "/classes/messages" || request.url === "/classes/room1" )) {
     response.writeHead(statusCode[2], headers);
     response.end();
   }
