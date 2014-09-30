@@ -29,6 +29,11 @@ var handleRequest = function(request, response) {
 
   /* .writeHead() tells our server what HTTP status code to send back */
   // response.writeHead(statusCode, headers);
+  //
+  if (request.method === "OPTIONS") {
+    response.writeHead(statusCode[0],headers);
+    response.end();
+  }
 
   if (request.method === "GET" && request.url === "/classes/messages") {
     headers['Content-Type'] = "application/json";
