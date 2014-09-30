@@ -1,7 +1,7 @@
 // YOUR CODE HERE:
 var app = {
   init: function(){
-    this.server = 'https://api.parse.com/1/classes/chatterbox';
+    this.server = 'http://127.0.0.1:3000';
     this.fetch();
     $('#main').on('click', '.username', function(){
       // console.log(this.text())

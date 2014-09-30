@@ -6,6 +6,7 @@
  * *Hint* Check out the node module documentation at http://nodejs.org/api/modules.html. */
 
 var dataStorage = {results: []};
+var roomStorage = {results: []};
 
 var handleRequest = function(request, response) {
   /* the 'request' argument comes from nodes http module. It includes info about the
@@ -23,38 +24,52 @@ var handleRequest = function(request, response) {
    * below about CORS. */
   var headers = defaultCorsHeaders;
 
-  headers['Content-Type'] = "text/plain";
+
+
 
   /* .writeHead() tells our server what HTTP status code to send back */
   // response.writeHead(statusCode, headers);
 
-  //Create some dummy data to test Get Request
-  // var dummyMessage = {username: "James", text: "test message", roomname: "lobby"};
-  // var results = [dummyMessage];
-
   if (request.method === "GET" && request.url === "/classes/messages") {
+    headers['Content-Type'] = "application/json";
     response.writeHead(statusCode[0], headers);
     response.write(JSON.stringify(dataStorage));
-    console.log("Data sent GET response: " + JSON.stringify(dataStorage));
+    response.end();
+  }
+  if (request.method === "GET" && request.url === "/classes/room1") {
+    headers['Content-Type'] = "application/json";
+    response.writeHead(statusCode[0], headers);
+    console.log("IMPORTANT:" + JSON.stringify(roomStorage));
+    response.end(JSON.stringify(roomStorage));
   }
   /* Make sure to always call response.end() - Node will not send
    * anything back to the client until you do. The string you pass to
    * response.end() will be the body of the response - i.e. what shows
    * up in the browser.*/
   if (request.method === "POST" && request.url === "/classes/messages") {
+    headers['Content-Type'] = "text/plain";
     response.writeHead(statusCode[1], headers);
     request.on('data', function(data){
       dataStorage.results.push(JSON.parse(data));
-      console.log("after post, the data object holds: " + dataStorage.results);
-    })
+    });
+    response.end();
+  }
+  if (request.method === "POST" && request.url === "/classes/room1") {
+    headers['Content-Type'] = "text/plain";
+    response.writeHead(statusCode[1], headers);
+    request.on('data', function(data){
+      roomStorage.results.push(JSON.parse(data));
+    });
+    response.end();
   }
     // response.write(JSON.stringify(data));
     //
-  if (request.url !== "/classes/messages") {
+  if (!(request.url === "/classes/messages" || request.url === "/classes/room1") ) {
     response.writeHead(statusCode[2], headers);
+    response.end();
   }
 
-  response.end();
+  // response.end();
 };
 
 /* These headers will allow Cross-Origin Resource Sharing (CORS).
@@ -69,4 +84,4 @@ var defaultCorsHeaders = {
   "access-control-max-age": 10 // Seconds.
 };
 
-module.exports = handleRequest;
+exports.handler = handleRequest;
