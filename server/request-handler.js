@@ -33,7 +33,7 @@ var handleRequest = function(request, response) {
    * below about CORS. */
   var headers = defaultCorsHeaders;
 
-
+  var usernameParam = /^\/\?username.\w+/;
 
 
   /* .writeHead() tells our server what HTTP status code to send back */
@@ -53,7 +53,7 @@ var handleRequest = function(request, response) {
   }
 
   //Serve files from server
-  if (request.method === "GET" && request.url === "/"){
+  if (request.method === "GET" && (request.url === "/" || request.url === /^\/\?username.\w+/)){
     headers["Content-Type"] = "text/html";
     response.writeHead(statusCode[0],headers);
     response.write(index);
