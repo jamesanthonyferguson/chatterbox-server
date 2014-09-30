@@ -14,8 +14,20 @@ var config = fs.readFileSync("../client/scripts/config.js");
 var _ = fs.readFileSync("../client/bower_components/underscore/underscore-min.js");
 var jQuery = fs.readFileSync("../client/bower_components/jquery/jquery.min.js");
 
+
 var dataStorage = {results: []};
 var roomStorage = {results: []};
+
+
+//Read messages from .txt file
+fs.readFile("./messageData.txt", "utf-8", function(err,fileData){
+  if (err) {console.log("error loading saved messags");}
+  var savedMessages = fileData.split("_-_");
+  savedMessages.pop()
+  for (var i = 0; i < savedMessages.length; i++) {
+    dataStorage.results.push(JSON.parse(savedMessages[i]))
+  }
+})
 
 var handleRequest = function(request, response) {
   /* the 'request' argument comes from nodes http module. It includes info about the
@@ -34,7 +46,6 @@ var handleRequest = function(request, response) {
   var headers = defaultCorsHeaders;
 
   var usernameParam = new RegExp("\/\?username=[a-zA-Z0-9]*");
-  var usernameParam2 = new RegExp("abc");
 
 
   /* .writeHead() tells our server what HTTP status code to send back */
@@ -121,6 +132,9 @@ var handleRequest = function(request, response) {
     response.writeHead(statusCode[1], headers);
     request.on('data', function(data){
       dataStorage.results.push(JSON.parse(data));
+      fs.appendFile("./messageData.txt", data + '_-_',function(err) {
+        if (err) {console.log('error appending message data to file')}
+      })
     });
     response.end();
   }
