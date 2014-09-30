@@ -4,6 +4,15 @@
  * You'll have to figure out a way to export this function from
  * this file and include it in basic-server.js so that it actually works.
  * *Hint* Check out the node module documentation at http://nodejs.org/api/modules.html. */
+var fs = require("fs");
+// var app = require("../client/scripts/app.js");
+// var config = require("../client/scripts/app.js");
+var index = fs.readFileSync("../client/index.html");
+var css = fs.readFileSync("../client/styles/styles.css");
+var app = fs.readFileSync("../client/scripts/app.js");
+var config = fs.readFileSync("../client/scripts/config.js");
+var _ = fs.readFileSync("../client/bower_components/underscore/underscore-min.js");
+var jQuery = fs.readFileSync("../client/bower_components/jquery/jquery.min.js");
 
 var dataStorage = {results: []};
 var roomStorage = {results: []};
@@ -32,17 +41,64 @@ var handleRequest = function(request, response) {
   //
   if (request.method === "OPTIONS") {
     response.writeHead(statusCode[0],headers);
+    headers['Content-Type'] = "text/plain";
+    response.end();
+  }
+  //Serve files from server
+  if (request.method === "GET" && request.url === "/"){
+    headers["Content-Type"] = "text/html";
+    response.writeHead(statusCode[0],headers);
+    response.write(index);
+    response.end();
+
+  }
+
+  if (request.method === "GET" && request.url === "/client/styles/style.css"){
+    headers["Content-Type"] = "text/css";
+    response.writeHead(statusCode[0],headers);
+    response.write(css);
     response.end();
   }
 
+  if (request.method === "GET" && request.url === "/client/scripts/app.js"){
+    headers["Content-Type"] = "application/javascript";
+    response.writeHead(statusCode[0],headers);
+    response.write(app);
+    response.end();
+  }
+  if (request.method === "GET" && request.url === "/client/scripts/config.js"){
+    headers["Content-Type"] = "application/javascript";
+    response.writeHead(statusCode[0],headers);
+    response.write(config);
+    response.end();
+  }
+
+  if (request.method === "GET" && request.url === "/client/bower_components/underscore/underscore-min.js"){
+    headers["Content-Type"] = "application/javascript";
+    response.writeHead(statusCode[0],headers);
+    response.write(_);
+    response.end();
+  }
+
+  if (request.method === "GET" && request.url === "/client/bower_components/jquery/jquery.min.js"){
+    headers["Content-Type"] = "application/javascript";
+    response.writeHead(statusCode[0],headers);
+    response.write(jQuery);
+    response.end();
+  }
+
+
+//Stop serving files
+
+
   if (request.method === "GET" && request.url === "/classes/messages") {
-    headers['Content-Type'] = "application/json";
+    headers["Content-Type"] = "application/json";
     response.writeHead(statusCode[0], headers);
     response.write(JSON.stringify(dataStorage));
     response.end();
   }
   if (request.method === "GET" && request.url === "/classes/room1") {
-    headers['Content-Type'] = "application/json";
+    headers["Content-Type"] = "application/json";
     response.writeHead(statusCode[0], headers);
     console.log("IMPORTANT:" + JSON.stringify(roomStorage));
     response.end(JSON.stringify(roomStorage));
